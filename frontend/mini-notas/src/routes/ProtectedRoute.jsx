@@ -1,10 +1,10 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 
+/**
+ * Protege rutas privadas verificando JWT
+ */
 const ProtectedRoute = ({ children }) => {
-  // Por ahora verificamos si existe el token en localStorage
-  // Cuando implementemos JWT, esta lógica se puede expandir
-  const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem("token");
 
   if (!token) {
     return <Navigate to="/login" replace />;

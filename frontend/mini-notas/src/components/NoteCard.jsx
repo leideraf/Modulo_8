@@ -1,52 +1,39 @@
-import React from 'react';
+const colors = {
+  Personal: "border-blue-500 bg-blue-50",
+  Trabajo: "border-green-500 bg-green-50",
+  Ideas: "border-yellow-500 bg-yellow-50",
+  Recordatorios: "border-red-500 bg-red-50",
+};
 
-const NoteCard = ({ note, onEdit, onDelete, categoryColors }) => {
-  // Formatear fecha
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('es-ES', options);
-  };
-
-  const borderColor = categoryColors[note.categoria] || 'border-gray-300';
-  const badgeColor = categoryColors[note.categoria] || 'bg-gray-100 text-gray-800';
-
+const NoteCard = ({ note, onDelete, onEdit }) => {
   return (
     <div
-      className={`bg-white rounded-lg shadow-md p-5 mb-4 border-l-4 ${borderColor} hover:shadow-lg transition-shadow duration-300`}
+      className={`p-5 rounded-xl shadow-md border-l-4 transition hover:shadow-lg ${colors[note.category]}`}
     >
-      {/* Encabezado: Título y Categoría */}
-      <div className="flex items-start justify-between mb-3">
-        <h3 className="text-lg font-semibold text-gray-900 flex-1 pr-4 break-words">
-          {note.titulo}
-        </h3>
-        <span
-          className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${badgeColor}`}
-        >
-          {note.categoria}
+      <div className="flex justify-between items-start">
+        <h3 className="font-bold text-lg text-gray-800">{note.title}</h3>
+        <span className="text-xs font-semibold px-2 py-1 rounded-full bg-white">
+          {note.category}
         </span>
       </div>
 
-      {/* Contenido */}
-      <p className="text-gray-700 text-sm mb-4 line-clamp-3">{note.contenido}</p>
+      <p className="text-xs text-gray-500 mt-1">{note.date}</p>
 
-      {/* Fecha */}
-      <p className="text-xs text-gray-500 mb-4">{formatDate(note.fechaCreacion)}</p>
+      <p className="mt-3 text-gray-700">{note.content}</p>
 
-      {/* Acciones */}
-      <div className="flex gap-2 justify-end">
+      <div className="flex gap-4 mt-4 text-sm">
         <button
-          onClick={() => onEdit(note)}
-          className="px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-300"
-          title="Editar nota"
+          onClick={onEdit}
+          className="text-blue-600 hover:underline"
         >
-          Editar
+          ✏️ Editar
         </button>
+
         <button
           onClick={() => onDelete(note.id)}
-          className="px-4 py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-300"
-          title="Eliminar nota"
+          className="text-red-600 hover:underline"
         >
-          Eliminar
+          🗑 Eliminar
         </button>
       </div>
     </div>
@@ -54,3 +41,4 @@ const NoteCard = ({ note, onEdit, onDelete, categoryColors }) => {
 };
 
 export default NoteCard;
+

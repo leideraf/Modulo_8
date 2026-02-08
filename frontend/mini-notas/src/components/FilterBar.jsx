@@ -1,46 +1,63 @@
-import React from 'react';
+const categories = [
+  { name: "Todas", color: "gray" },
+  { name: "Personal", color: "blue" },
+  { name: "Trabajo", color: "green" },
+  { name: "Ideas", color: "yellow" },
+  { name: "Recordatorios", color: "red" },
+];
 
-const FilterBar = ({ categories, selectedCategory, onCategoryChange, notesByCategory }) => {
-  const allCategories = ['Todas', ...categories];
+const colorClasses = {
+  gray: "border-gray-400 text-gray-700 hover:bg-gray-100",
+  blue: "border-blue-500 text-blue-600 hover:bg-blue-50",
+  green: "border-green-500 text-green-600 hover:bg-green-50",
+  yellow: "border-yellow-500 text-yellow-600 hover:bg-yellow-50",
+  red: "border-red-500 text-red-600 hover:bg-red-50",
+};
 
+const activeClasses = {
+  gray: "bg-gray-200",
+  blue: "bg-blue-100",
+  green: "bg-green-100",
+  yellow: "bg-yellow-100",
+  red: "bg-red-100",
+};
+
+const FilterBar = ({ value, onChange, counts = {} }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-      <h3 className="text-sm font-semibold text-gray-700 mb-4">Filtrar por categoría:</h3>
-      <div className="flex flex-wrap gap-2">
-        {allCategories.map((category) => {
-          const count = notesByCategory[category] || 0;
-          const isSelected = selectedCategory === category;
+    <div className="flex flex-wrap gap-2 mb-6">
+      {categories.map((cat) => {
+        const isActive = value === cat.name;
+        const count = counts[cat.name] || 0;
 
-          return (
-            <button
-              key={category}
-              onClick={() => onCategoryChange(category)}
-              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2
-                ${
-                  isSelected
-                    ? 'bg-blue-600 text-white focus:ring-blue-600'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300 focus:ring-gray-400'
-                }`}
+        return (
+          <button
+            key={cat.name}
+            onClick={() => onChange(cat.name)}
+            className={`
+              px-4 py-2 rounded-full border text-sm font-medium transition
+              flex items-center gap-2
+              ${colorClasses[cat.color]}
+              ${isActive ? activeClasses[cat.color] : "bg-white"}
+            `}
+          >
+            <span>{cat.name}</span>
+
+            {/* Badge contador */}
+            <span
+              className={`
+                text-xs font-semibold px-2 py-0.5 rounded-full
+                ${isActive ? "bg-white/70" : "bg-gray-100"}
+              `}
             >
-              {category}
-              {count > 0 && (
-                <span
-                  className={`px-2 py-0.5 rounded-full text-xs font-semibold
-                  ${
-                    isSelected
-                      ? 'bg-blue-800 text-blue-100'
-                      : 'bg-gray-400 text-white'
-                  }`}
-                >
-                  {count}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
+              {count}
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 };
 
 export default FilterBar;
+
+

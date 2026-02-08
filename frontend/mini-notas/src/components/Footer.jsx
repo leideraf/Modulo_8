@@ -8,7 +8,7 @@ const Footer = () => {
                     &copy; {new Date().getFullYear()} Mi Sistema de Notas. Todos los derechos reservados.
                 </p>
                 <p className="text-xs mt-2">
-                    Hecho con ❤️ por Leider Arias
+                    Hecho con ❤️ por Leider Arias Franco
                 </p>
             </div>
         </footer>
