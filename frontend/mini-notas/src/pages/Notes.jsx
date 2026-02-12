@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axiosClient from "../api/axiosClient";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -15,38 +16,78 @@ const Notes = () => {
   // ===============================
   const [notes, setNotes] = useState([]);
   const [filter, setFilter] = useState("Todas");
-  const [editingNote, setEditingNote] = useState(null); // 👈 NUEVO
+  const [editingNote, setEditingNote] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // ===============================
-  // ACTIONS
+  // OBTENER NOTAS DESDE API
   // ===============================
+  const fetchNotes = async () => {
+    try {
+      const response = await axiosClient.get("/notes");
+      setNotes(response.data);
+    } catch (error) {
+      console.error("Error al obtener notas:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // ➕ Crear nota
-  const addNote = (data) => {
-    setNotes((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
+  useEffect(() => {
+    fetchNotes();
+  }, []);
+
+  // ===============================
+  // CREAR NOTA (POST)
+  // ===============================
+  const addNote = async (data) => {
+    try {
+      const newNote = {
         ...data,
         date: new Date().toLocaleDateString(),
-      },
-    ]);
+      };
+
+      const response = await axiosClient.post("/notes", newNote);
+
+      setNotes((prev) => [...prev, response.data]);
+    } catch (error) {
+      console.error("Error al crear nota:", error);
+    }
   };
 
-  // ✏️ Actualizar nota
-  const updateNote = (updatedNote) => {
-    setNotes((prev) =>
-      prev.map((n) => (n.id === updatedNote.id ? updatedNote : n))
-    );
-    setEditingNote(null);
+  // ===============================
+  // ACTUALIZAR NOTA (PUT)
+  // ===============================
+  const updateNote = async (updatedNote) => {
+    try {
+      await axiosClient.put(`/notes/${updatedNote.id}`, updatedNote);
+
+      setNotes((prev) =>
+        prev.map((n) => (n.id === updatedNote.id ? updatedNote : n))
+      );
+
+      setEditingNote(null);
+    } catch (error) {
+      console.error("Error al actualizar nota:", error);
+    }
   };
 
-  // ❌ Eliminar nota
-  const deleteNote = (id) => {
-    setNotes((prev) => prev.filter((n) => n.id !== id));
+  // ===============================
+  // ELIMINAR NOTA (DELETE)
+  // ===============================
+  const deleteNote = async (id) => {
+    try {
+      await axiosClient.delete(`/notes/${id}`);
+
+      setNotes((prev) => prev.filter((n) => n.id !== id));
+    } catch (error) {
+      console.error("Error al eliminar nota:", error);
+    }
   };
 
-  // 🚪 Logout
+  // ===============================
+  // LOGOUT
+  // ===============================
   const logout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -80,14 +121,12 @@ const Notes = () => {
       <Header onLogout={logout} />
 
       <main className="flex-1 p-6 max-w-6xl mx-auto w-full">
-        {/* Filtro */}
         <FilterBar
           value={filter}
           onChange={setFilter}
           counts={categoryCounts}
         />
 
-        {/* Formulario crear / editar */}
         <NoteForm
           onAdd={addNote}
           onUpdate={updateNote}
@@ -95,8 +134,9 @@ const Notes = () => {
           onCancelEdit={() => setEditingNote(null)}
         />
 
-        {/* Lista */}
-        {filteredNotes.length === 0 ? (
+        {loading ? (
+          <p className="text-center text-gray-500 mt-12">Cargando notas...</p>
+        ) : filteredNotes.length === 0 ? (
           <p className="text-center text-gray-500 mt-12">
             No hay notas para esta categoría 📭
           </p>
@@ -107,7 +147,7 @@ const Notes = () => {
                 key={note.id}
                 note={note}
                 onDelete={deleteNote}
-                onEdit={() => setEditingNote(note)} // 👈 EDITAR
+                onEdit={() => setEditingNote(note)}
               />
             ))}
           </div>
@@ -120,5 +160,6 @@ const Notes = () => {
 };
 
 export default Notes;
+
 
 

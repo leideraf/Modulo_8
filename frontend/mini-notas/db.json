@@ -1,0 +1,33 @@
+{
+  "users": [
+    {
+      "username": "leider arias",
+      "email": "leider.elian.ariasfranco@gmail.com",
+      "password": "Leider1357",
+      "id": 1
+    }
+  ],
+  "notes": [
+    {
+      "title": "Hcer ejercicio",
+      "content": "hacer ejercicio de lunes a viernes",
+      "category": "Personal",
+      "date": "11/2/2026",
+      "id": 1
+    },
+    {
+      "title": "Estudiar en la universidad",
+      "content": "Realizar trabajos de lunes a jueves de la universidad",
+      "category": "Personal",
+      "date": "11/2/2026",
+      "id": 2
+    },
+    {
+      "title": "Crear sistema de inventario",
+      "content": "Nuevo sistema de inventario para el gimnasio",
+      "category": "Ideas",
+      "date": "11/2/2026",
+      "id": 3
+    }
+  ]
+}
